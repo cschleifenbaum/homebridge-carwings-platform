@@ -5206,8 +5206,7 @@ var CarwingsBattery = /** @class */ (function (_super) {
             this.chargingState = batteryChargingStatus;
             this.batteryService.getCharacteristic(Characteristic.ChargingState).updateValue(this.chargingState);
         }
-        var currentCharge = parseInt(status.BatteryStatusRecords.BatteryStatus.BatteryRemainingAmount);
-        var chargePercent = Math.floor(currentCharge / 12 * 100);
+        var chargePercent = parseInt(status.BatteryStatusRecords.BatteryStatus.SOC.Value);
         if (chargePercent > 100)
             chargePercent = 100;
         if (this.chargePercent !== chargePercent) {
