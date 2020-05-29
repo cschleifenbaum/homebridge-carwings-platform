@@ -1229,7 +1229,7 @@ var querystring = __webpack_require__(52);
 axios_1.default.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios_1.default.defaults.baseURL = 'https://gdcportalgw.its-mo.com';
 process.on('unhandledRejection', function (r) { return console.log(r); });
-var initial_app_strings = 'geORNtsZe5I4lRGjG9GZiA';
+var initial_app_str = '9s5rfKVuMrT03RtzajWNcA';
 var defaultRegionCode = 'NNA';
 var language = 'en-US';
 var tz = 'America/Denver';
@@ -1304,7 +1304,7 @@ function api(action, data) {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, axios_1.default.post("/gworchest_0405EC/gdc/" + action + ".php", querystring.stringify(data))];
+                case 0: return [4 /*yield*/, axios_1.default.post("/api_v190426_NE/gdc/" + action + ".php", querystring.stringify(data))];
                 case 1:
                     response = _a.sent();
                     if (response.data.status === 200) {
@@ -1391,7 +1391,7 @@ var acompose = function (fn) {
         return fn;
     }
 };
-var performChallenge = acompose(function (responseResult) { return responseResult.baseprm; }, function () { return api('InitialApp', { initial_app_strings: initial_app_strings }); });
+var performChallenge = acompose(function (responseResult) { return responseResult.baseprm; }, function () { return api('InitialApp_v2', { initial_app_str: initial_app_str }); });
 // rawCredentials => apiCredentials
 var generateCredentials = function (UserId, password, RegionCode) {
     if (RegionCode === void 0) { RegionCode = defaultRegionCode; }
@@ -1413,7 +1413,7 @@ var generateCredentials = function (UserId, password, RegionCode) {
 var performUserLogin = function (credentials) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, api('UserLoginRequest', __assign({ initial_app_strings: initial_app_strings }, credentials))];
+            case 0: return [4 /*yield*/, api('UserLoginRequest', __assign({ initial_app_str: initial_app_str }, credentials))];
             case 1: return [2 /*return*/, _a.sent()];
         }
     });
