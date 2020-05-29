@@ -5049,6 +5049,7 @@ var CarwingsBattery = /** @class */ (function (_super) {
     function CarwingsBattery() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.chargePercent = 0;
+        _this.chargingCableState = 0;
         _this.statusLowBattery = 0;
         _this.chargingState = 0;
         _this.switchState = 0;
@@ -5060,6 +5061,9 @@ var CarwingsBattery = /** @class */ (function (_super) {
         this.switchService.getCharacteristic(Characteristic.On)
             .on('get', this.getState.bind(this))
             .on('set', this.setChargingState.bind(this));
+        this.chargingCableService = new Service.ContactSensor(this.name, uuid, "charger");
+        this.chargingCableService.getCharacteristic(Characteristic.ContactSensorState)
+            .on('get', this.getChargingCableState.bind(this));
         this.batteryService = new Service.BatteryService(this.name, uuid, "battery");
         this.batteryService.getCharacteristic(Characteristic.BatteryLevel)
             .on('get', this.getBatteryLevel.bind(this));
@@ -5073,8 +5077,12 @@ var CarwingsBattery = /** @class */ (function (_super) {
         this.informationService
             .setCharacteristic(Characteristic.Manufacturer, 'Loftux Carwings')
             .setCharacteristic(Characteristic.Model, 'Battery');
-        return [this.switchService, this.batteryService, this.informationService];
+        return [this.switchService, this.chargingCableService, this.batteryService, this.informationService];
     };
+    CarwingsBattery.prototype.getChargingCableState = function (callback) {
+        this.log.debug("returning charging cable state. 🔌" + this.chargingCableState);
+        callback(null, this.chargingCableState);
+    }
     CarwingsBattery.prototype.getBatteryLevel = function (callback) {
         this.log.debug("returning battery level. 🔋" + this.chargePercent);
         callback(null, this.chargePercent);
@@ -5213,6 +5221,11 @@ var CarwingsBattery = /** @class */ (function (_super) {
             this.chargePercent = chargePercent;
             this.batteryService.getCharacteristic(Characteristic.BatteryLevel).updateValue(this.chargePercent);
         }
+        var chargingCableState = (status.BatteryStatusRecords.PluginState === 'CONNECTED') ? 1 : 0;
+        if (this.chargingCableState !== chargingCableState) {
+            this.chargingCableState = chargingCableState;
+            this.chargingCableService.getCharacteristic(Characteristic.ContactSensorState).updateValue(this.chargingCableState);
+        }
         var lowBatteryStatus = (chargePercent < this.config.lowBattery) ? 1 : 0;
         if (this.statusLowBattery !== lowBatteryStatus) {
             this.statusLowBattery = lowBatteryStatus;
@@ -5221,6 +5234,7 @@ var CarwingsBattery = /** @class */ (function (_super) {
         this.switchState = (batteryChargingStatus === Characteristic.ChargingState.CHARGING ? 1 : 0);
         this.log.debug('updateServiceCharacteristic', status);
         this.log.debug('chargingState', this.chargingState);
+        this.log.debug('chargingCableState', this.chargingCableState);
         this.log.debug('chargePercent', this.chargePercent);
         this.log.debug('statusLowBattery', this.statusLowBattery);
         this.log.debug('switchState', this.switchState);
