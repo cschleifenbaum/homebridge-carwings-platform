@@ -1342,10 +1342,7 @@ var blowPassword = _.curry(function (key, plainpass) {
  */
 function getsessionid(profile) {
     //console.log("LOGIN", profile);
-    if (profile && profile.vehicleInfo[0]) {
-        return profile.vehicleInfo[0].custom_sessionid;
-    }
-    else if (profile && profile.VehicleInfoList && profile.VehicleInfoList.vehicleInfo[0]) {
+    if (profile && profile.VehicleInfoList && profile.VehicleInfoList.vehicleInfo[0]) {
         return profile.VehicleInfoList.vehicleInfo[0].custom_sessionid;
     }
     else {
@@ -1353,10 +1350,7 @@ function getsessionid(profile) {
     }
 }
 function getvin(profile) {
-    if (profile && profile.vehicleInfo[0]) {
-        return profile.vehicleInfo[0].vin;
-    }
-    else if (profile && profile.VehicleInfoList && profile.VehicleInfoList.vehicleInfo[0]) {
+    if (profile && profile.VehicleInfoList && profile.VehicleInfoList.vehicleInfo[0]) {
         return profile.VehicleInfoList.vehicleInfo[0].vin;
     }
     else {
